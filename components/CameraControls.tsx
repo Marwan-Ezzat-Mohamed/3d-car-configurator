@@ -84,7 +84,9 @@ export const CameraControls = () => {
       onStart={() => {
         setCameraMode(CameraModes.FREE);
       }}
-      maxPolarAngle={toRad(115)}
+      maxPolarAngle={toRad(100)}
+      minPolarAngle={toRad(10)}
+      maxAzimuthAngle={toRad(90)}
     />
   );
 };
