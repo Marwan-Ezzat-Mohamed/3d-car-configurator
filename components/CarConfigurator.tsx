@@ -6,9 +6,10 @@ import {
   carCustomizationsAtom,
 } from "@/jotai";
 import { useAtom, useSetAtom } from "jotai";
-import { FC, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { ColorInput } from "@mantine/core";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { cn, rimSizes } from "@/lib/utils";
 
 const inputCameraMap: Record<keyof typeof colorGroups, CameraModes> = {
   body: CameraModes.OVERVIEW,
@@ -35,6 +36,7 @@ const colorGroups: ColorGroup = {
       "frontLeftWheelDisc",
       "frontLeftWheelCaliper",
       "frontLeftWheelTire",
+      "frontLeftRimSize",
     ],
     rearLeftWheel: [
       "rearLeftWheelBolts",
@@ -42,6 +44,7 @@ const colorGroups: ColorGroup = {
       "rearLeftWheelDisc",
       "rearLeftWheelCaliper",
       "rearLeftWheelTire",
+      "rearLeftRimSize",
     ],
     frontRightWheel: [
       "frontRightWheelBolts",
@@ -49,6 +52,7 @@ const colorGroups: ColorGroup = {
       "frontRightWheelDisc",
       "frontRightWheelCaliper",
       "frontRightWheelTire",
+      "frontRightRimSize",
     ],
     rearRightWheel: [
       "rearRightWheelBolts",
@@ -56,18 +60,22 @@ const colorGroups: ColorGroup = {
       "rearRightWheelDisc",
       "rearRightWheelCaliper",
       "rearRightWheelTire",
+      "rearRightRimSize",
     ],
   },
 };
-const CarConfigurator: FC = () => {
+const CarConfigurator = () => {
   const [config, setConfig] = useAtom(carCustomizationsAtom);
   const setCameraMode = useSetAtom(cameraModeAtom);
   const [isExpanded, setIsExpanded] = useState(true);
 
-  const handleInputChange = (color: string, key: keyof CarCustomizations) => {
+  const handleInputChange = (
+    value: string | number,
+    key: keyof CarCustomizations
+  ) => {
     setConfig({
       ...config,
-      [key]: color,
+      [key]: value,
     });
   };
 
@@ -97,12 +105,41 @@ const CarConfigurator: FC = () => {
         .trim()
         .replace(/^\w/, (c) => c.toUpperCase());
 
+      const isColor = !!config[colorKey as keyof CarCustomizations]
+        ?.toString()
+        .startsWith("#");
+
+      if (!isColor) {
+        return (
+          <div key={colorKey} className="w-full">
+            <span className="font-medium text-sm">Rim Size</span>
+            <div className="flex gap-2">
+              {rimSizes.map((size) => (
+                <button
+                  key={size}
+                  onClick={() =>
+                    handleInputChange(size, colorKey as keyof CarCustomizations)
+                  }
+                  className={cn(
+                    "w-full capitalize rounded-lg py-2 font-bold bg-gray-100",
+                    size === config[colorKey as keyof CarCustomizations] &&
+                      "bg-gray-300 ring-2 ring-gray-400"
+                  )}
+                >
+                  {size} inch
+                </button>
+              ))}
+            </div>
+          </div>
+        );
+      }
+
       return (
         <div key={colorKey} className="w-full ">
           <ColorInput
             label={name}
             format="hex"
-            value={config[colorKey as keyof CarCustomizations]}
+            value={config[colorKey as keyof CarCustomizations] as string}
             onChange={(color) =>
               handleInputChange(color, colorKey as keyof CarCustomizations)
             }

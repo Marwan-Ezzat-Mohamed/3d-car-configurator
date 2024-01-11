@@ -2,6 +2,7 @@
 
 import { atomWithStorage } from "jotai/utils";
 import { atom } from "jotai";
+import { rimSizes } from "@/lib/utils";
 
 type HexColor = `#${string}`;
 
@@ -14,26 +15,34 @@ export type CarCustomizations = {
   frontHeadLights?: HexColor;
   rearLights?: HexColor;
   fogLight?: HexColor;
+
   frontLeftWheelTire?: HexColor;
   frontLeftWheelDisc?: HexColor;
   frontLeftWheelRim?: HexColor;
   frontLeftWheelBolts?: HexColor;
   frontLeftWheelCaliper?: HexColor;
+  frontLeftRimSize?: number;
+
   frontRightWheelTire?: HexColor;
   frontRightWheelDisc?: HexColor;
   frontRightWheelRim?: HexColor;
   frontRightWheelBolts?: HexColor;
   frontRightWheelCaliper?: HexColor;
+  frontRightRimSize?: number;
+
   rearLeftWheelTire?: HexColor;
   rearLeftWheelDisc?: HexColor;
   rearLeftWheelRim?: HexColor;
   rearLeftWheelBolts?: HexColor;
   rearLeftWheelCaliper?: HexColor;
+  rearLeftRimSize?: number;
+
   rearRightWheelTire?: HexColor;
   rearRightWheelDisc?: HexColor;
   rearRightWheelRim?: HexColor;
   rearRightWheelBolts?: HexColor;
   rearRightWheelCaliper?: HexColor;
+  rearRightRimSize?: number;
   carColor?: HexColor;
 };
 

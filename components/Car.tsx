@@ -12,6 +12,7 @@ import { useGLTF } from "@react-three/drei";
 import { GLTF } from "three-stdlib";
 import { useAtomValue, useSetAtom } from "jotai";
 import { carCustomizationsAtom } from "@/jotai";
+import { rimSizes } from "@/lib/utils";
 
 type GLTFResult = GLTF & {
   nodes: {
@@ -70,7 +71,7 @@ const Car = (props: JSX.IntrinsicElements["group"]) => {
   const { nodes, materials } = useGLTF(
     "/models/tesla_model_y.glb"
   ) as GLTFResult;
-
+  const LARGEST_WHEEL_SIZE = 24;
   const {
     roofGlass,
     chrome,
@@ -87,24 +88,28 @@ const Car = (props: JSX.IntrinsicElements["group"]) => {
     frontLeftWheelRim,
     frontLeftWheelBolts,
     frontLeftWheelCaliper,
+    frontLeftRimSize = LARGEST_WHEEL_SIZE,
 
     frontRightWheelTire,
     frontRightWheelDisc,
     frontRightWheelRim,
     frontRightWheelBolts,
     frontRightWheelCaliper,
+    frontRightRimSize = LARGEST_WHEEL_SIZE,
 
     rearLeftWheelTire,
     rearLeftWheelDisc,
     rearLeftWheelRim,
     rearLeftWheelBolts,
     rearLeftWheelCaliper,
+    rearLeftRimSize = LARGEST_WHEEL_SIZE,
 
     rearRightWheelTire,
     rearRightWheelDisc,
     rearRightWheelRim,
     rearRightWheelBolts,
     rearRightWheelCaliper,
+    rearRightRimSize = LARGEST_WHEEL_SIZE,
 
     carColor,
   } = useAtomValue(carCustomizationsAtom);
@@ -115,7 +120,8 @@ const Car = (props: JSX.IntrinsicElements["group"]) => {
     //default colors for the car
     //if the colors are not set in the atom, set them to the default colors
     if (roofGlass) return;
-    setCarCustomizations({
+    setCarCustomizations((prev) => ({
+      ...prev,
       roofGlass: `#${materials.glass.color.getHexString()}`,
       chrome: `#${materials.chrome.color.getHexString()}`,
       frontGlass: `#${materials.glass.color.getHexString()}`,
@@ -129,6 +135,7 @@ const Car = (props: JSX.IntrinsicElements["group"]) => {
       frontLeftWheelRim: `#${materials.material_12.color.getHexString()}`,
       frontLeftWheelBolts: `#${materials.chrome.color.getHexString()}`,
       frontLeftWheelCaliper: `#${materials.cali.color.getHexString()}`,
+
       frontRightWheelTire: `#${materials.tire.color.getHexString()}`,
       frontRightWheelDisc: `#${materials.disc.color.getHexString()}`,
       frontRightWheelRim: `#${materials.material_12.color.getHexString()}`,
@@ -146,7 +153,12 @@ const Car = (props: JSX.IntrinsicElements["group"]) => {
       rearRightWheelBolts: `#${materials.chrome.color.getHexString()}`,
       rearRightWheelCaliper: `#${materials.cali.color.getHexString()}`,
       carColor: `#${materials.paint.color.getHexString()}`,
-    });
+
+      rearLeftRimSize: rimSizes[rimSizes.length - 1],
+      rearRightRimSize: rimSizes[rimSizes.length - 1],
+      frontLeftRimSize: rimSizes[rimSizes.length - 1],
+      frontRightRimSize: rimSizes[rimSizes.length - 1],
+    }));
   }, []);
 
   return (
@@ -290,7 +302,7 @@ const Car = (props: JSX.IntrinsicElements["group"]) => {
             name="front left wheel"
             position={[83.884, 37.78, 163.232]}
             rotation={[-Math.PI / 2, 0, -0.297]}
-            scale={204.779}
+            scale={204.779 * (frontLeftRimSize / LARGEST_WHEEL_SIZE)}
           >
             <mesh
               name="tire"
@@ -364,7 +376,7 @@ const Car = (props: JSX.IntrinsicElements["group"]) => {
             name="front right wheel"
             position={[-83.884, 37.78, 163.232]}
             rotation={[-Math.PI / 2, 0, 2.845]}
-            scale={204.779}
+            scale={204.779 * (frontRightRimSize / LARGEST_WHEEL_SIZE)}
           >
             <mesh
               name="wheel001_tire_0"
@@ -438,7 +450,7 @@ const Car = (props: JSX.IntrinsicElements["group"]) => {
             name="rear left wheel"
             position={[83.884, 37.78, -126.603]}
             rotation={[-Math.PI / 2, 0, 0]}
-            scale={204.779}
+            scale={204.779 * (rearLeftRimSize / LARGEST_WHEEL_SIZE)}
           >
             <mesh
               name="wheel002_tire_0"
@@ -512,7 +524,7 @@ const Car = (props: JSX.IntrinsicElements["group"]) => {
             name="rear right wheel"
             position={[-83.884, 37.78, -126.603]}
             rotation={[-Math.PI / 2, 0, -Math.PI]}
-            scale={204.779}
+            scale={204.779 * (rearRightRimSize / LARGEST_WHEEL_SIZE)}
           >
             <mesh
               name="wheel004_tire_0"
