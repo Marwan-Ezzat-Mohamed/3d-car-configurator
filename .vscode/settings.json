@@ -1,8 +1,5 @@
 {
-  "cSpell.words": [
-    "Configurator",
-    "GLTF"
-  ],
+  "cSpell.words": ["Configurator", "GLTF", "gsap"],
   "typescript.tsdk": "node_modules\\.pnpm\\typescript@5.3.3\\node_modules\\typescript\\lib",
   "typescript.enablePromptUseWorkspaceTsdk": true
 }
