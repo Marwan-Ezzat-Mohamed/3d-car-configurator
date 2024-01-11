@@ -5,7 +5,7 @@ import type { OrbitControls as OrbitControlsImpl } from "three-stdlib";
 import { useFrame } from "@react-three/fiber";
 import { useAtom } from "jotai";
 
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import { gsap } from "gsap";
 import * as THREE from "three";
 
@@ -51,32 +51,28 @@ export const CameraControls = () => {
   const [cameraMode, setCameraMode] = useAtom(cameraModeAtom);
   const orbitControls = useRef<OrbitControlsImpl>(null);
 
-  useFrame((state) => {
-    if (!orbitControls.current || cameraMode === CameraModes.FREE) {
-      return;
-    }
-
-    const targetPosition = cameraPositions[cameraMode].position;
-    const targetTarget = cameraPositions[cameraMode].target;
-
-    gsap.to(state.camera.position, {
+  useEffect(() => {
+    if (!orbitControls.current || cameraMode === CameraModes.FREE) return;
+    const { position, target } = cameraPositions[cameraMode];
+    const targetAnimation = gsap.to(orbitControls.current.target, {
+      x: target.x,
+      y: target.y,
+      z: target.z,
       duration: 1,
-      x: targetPosition.x,
-      y: targetPosition.y,
-      z: targetPosition.z,
-      ease: "power1.out",
-      onUpdate: () => state.camera.updateProjectionMatrix(),
+      ease: "power2.out",
     });
-
-    gsap.to(orbitControls.current.target, {
+    const cameraAnimation = gsap.to(orbitControls.current.object.position, {
+      x: position.x,
+      y: position.y,
+      z: position.z,
       duration: 1,
-      x: targetTarget.x,
-      y: targetTarget.y,
-      z: targetTarget.z,
-      ease: "power1.out",
-      onUpdate: () => orbitControls.current?.update(),
+      ease: "power2.out",
     });
-  });
+    return () => {
+      targetAnimation.kill();
+      cameraAnimation.kill();
+    };
+  }, [cameraMode]);
 
   return (
     <OrbitControls

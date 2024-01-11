@@ -1,10 +1,6 @@
 "use client";
 
-import {
-  MeshReflectorMaterial,
-  PerspectiveCamera,
-  Stage,
-} from "@react-three/drei";
+import { MeshReflectorMaterial, Stage } from "@react-three/drei";
 
 import Car from "./Car";
 import { CameraControls } from "./CameraControls";
@@ -12,9 +8,9 @@ import { CameraControls } from "./CameraControls";
 const Scene = () => {
   return (
     <>
-      <PerspectiveCamera makeDefault position={[3, 2, 3.5]} fov={80} />
+      {/* <PerspectiveCamera makeDefault position={[3, 2, 3.5]} fov={80} /> */}
       <CameraControls />
-
+      <ambientLight />
       <Stage environment="city" intensity={0.9} castShadow={false}>
         <Car />
       </Stage>
